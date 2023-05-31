@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true })) //直接從express呼叫
 app.get('/', (req, res) => {
   Todo.find()
     .lean()
+    .sort({ _id: 'asc' })
     .then(todos => res.render('index', { todos }))
     .catch(error => console.error(error))
 })
@@ -67,7 +68,7 @@ app.post('/todos/:id/edit', (req, res) => {
     .then(todo => {
       todo.name = name
       todo.isDone = isDone === 'on' // 以isDone是否等於'on'的判別結果來回傳true/false給todo.isDone
-       todo.save()
+      todo.save()
     })
     .then(() => res.redirect(`/todos/${id}`))
     .catch(error => console.error(error))
