@@ -62,11 +62,12 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const newName = req.body.name
+  const { name, isDone } = req.body
   return Todo.findById(id)
     .then(todo => {
-      todo.name = newName
-      return todo.save()
+      todo.name = name
+      todo.isDone = isDone === 'on' // 以isDone是否等於'on'的判別結果來回傳true/false給todo.isDone
+       todo.save()
     })
     .then(() => res.redirect(`/todos/${id}`))
     .catch(error => console.error(error))
