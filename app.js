@@ -1,8 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
-const Todo = require('./models/todo')
 const methodOverride = require('method-override')
+const routes = require('./routes')
 
 // 僅在非正式環境時，使用dotenv
 if (process.env.NODE_ENV !== 'production') {
@@ -28,61 +28,7 @@ app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true })) //直接從express呼叫
 app.use(methodOverride('_method')) // 設定每一筆請求都會先以 methodOverride 進行前置處理
 
-app.get('/', (req, res) => {
-  Todo.find()
-    .lean()
-    .sort({ _id: 'asc' })
-    .then(todos => res.render('index', { todos }))
-    .catch(error => console.error(error))
-})
-
-app.get('/todos/new', (req, res) => {
-  res.render('new')
-})
-
-app.post('/todos', (req, res) => {
-  const name = req.body.name
-  return Todo.create({ name })
-    .then(() => res.redirect('/'))
-    .catch(error => console.error(error))
-})
-
-app.get('/todos/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .lean()
-    .then(todo => res.render('detail', { todo }))
-    .catch(error => console.error(error))
-})
-
-app.get('/todos/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .lean()
-    .then(todo => res.render('edit', { todo }))
-    .catch(error => console.error(error))
-})
-
-app.put('/todos/:id', (req, res) => {
-  const id = req.params.id
-  const { name, isDone } = req.body
-  return Todo.findById(id)
-    .then(todo => {
-      todo.name = name
-      todo.isDone = isDone === 'on' // 以isDone是否等於'on'的判別結果來回傳true/false給todo.isDone
-      todo.save()
-    })
-    .then(() => res.redirect(`/todos/${id}`))
-    .catch(error => console.error(error))
-})
-
-app.delete('/todos/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .then(todo => todo.remove())
-    .then(() => res.redirect('/'))
-    .catch(error => console.error(error))
-})
+app.use(routes)
 
 app.listen(3000, () => {
   console.log(`App is running on http://localhost:3000`)
