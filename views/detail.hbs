@@ -1,9 +1,13 @@
-<p>
-  <input type="checkbox" name="isDone" {{#if todo.isDone}} checked {{/if}} disabled>
-  {{ todo.name }}
-</p>
-<a href="/todos/{{todo._id}}/edit">edit</a>
-<a href="/">back</a>
 <form action="/todos/{{todo._id}}?_method=DELETE" method="POST" style="display: inline;">
-  <button type="submit">delete</button>
+  <div class="input-group mb-3">
+    <div class="input-group-text">
+      <input class="form-check-input mt-0" type="checkbox" name="isDone" {{#if todo.isDone}} checked {{/if}} disabled>
+    </div>
+    <input type="text" class="form-control me-2" name="name" placeholder="name" value="{{ todo.name }}" disabled>
+    <div class="col-auto">
+      <a class="btn btn-secondary" href="/">back</a>
+      <a class="btn btn-success" href="/todos/{{todo._id}}/edit">edit</a>
+      <button class="btn btn-danger" type="submit">delete</button>
+    </div>
+  </div>
 </form>
