@@ -6,5 +6,4 @@ db.once('open', () => {
     Todo.create({ name: `name-${i}` })
   }
   console.log('done')
-  db.close()
 })
