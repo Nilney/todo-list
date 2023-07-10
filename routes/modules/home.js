@@ -4,7 +4,8 @@ const router = express.Router()
 const Todo = require('../../models/todo')
 
 router.get('/', (req, res) => {
-  Todo.find()
+  const userId = req.user._id
+  Todo.find({ userId }) // 僅提供該使用者的todos
     .lean()
     .sort({ _id: 'asc' }) // 反向為desc
     .then(todos => res.render('index', { todos }))
